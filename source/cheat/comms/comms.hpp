@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <vector>
@@ -62,5 +62,6 @@ void canada_t::write(std::uint64_t address, T value)
 	ULONG bytes_written{};
 	Luck_WriteVirtualMemory(this->process_handle, reinterpret_cast<PVOID>(address), &value, sizeof(T), &bytes_written);
 }
+
 inline std::unique_ptr<canada_t> canada = std::make_unique<canada_t>(); // global canada object
 

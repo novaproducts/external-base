@@ -1,33 +1,31 @@
-#include "classes.hpp"
-canada_t g_comms;
-
+﻿#include "classes.hpp"
 
 std::string rbx::instance_t::get_name() const {
-	std::uint64_t ptr = g_comms.read<std::uint64_t>(this->address + Offsets::Instance::Name);
+	std::uint64_t ptr = canada->read<std::uint64_t>(this->address + Offsets::Instance::Name);
 	if (ptr != 0) {
-		return g_comms.read_string(ptr);
+		return canada->read_string(ptr);
 	}
 	return "unknown";
 }
 
 rbx::instance_t rbx::instance_t::get_model_instance() const {
 
-    rbx::instance_t modelInstance = g_comms.read<rbx::instance_t>(this->address + Offsets::Player::ModelInstance);
+    rbx::instance_t modelInstance = canada->read<rbx::instance_t>(this->address + Offsets::Player::ModelInstance);
     return modelInstance;
 }
 
 std::string rbx::instance_t::get_class_name() const
 {
-	std::uint64_t classAddress = g_comms.read<std::uint64_t>(this->address + Offsets::Instance::ClassDescriptor);
-	std::uint64_t sizeAddress = classAddress + Offsets::Instance::ClassName;
-	std::uint64_t classNameSize = g_comms.read<std::uint64_t>(sizeAddress);
-	return g_comms.read_string(classNameSize);
+	std::uint64_t classAddress = canada->read<std::uint64_t>(this->address + Offsets::Instance::ClassDescriptor);
+	std::uint64_t classNameSize = canada->read<std::uint64_t>(classAddress + Offsets::Instance::ClassName);
+
+	return canada->read_string(classNameSize);
 }
 
 
 std::uint64_t rbx::instance_t::get_team() 
 {
-	return g_comms.read<uint64_t>(this->address + Offsets::Player::Team);
+	return canada->read<uint64_t>(this->address + Offsets::Player::Team);
 }
 
 std::vector<rbx::instance_t> rbx::instance_t::get_children()
@@ -35,11 +33,10 @@ std::vector<rbx::instance_t> rbx::instance_t::get_children()
 
 	std::vector<instance_t> children;
 
-	std::uint64_t start = g_comms.read<std::uint64_t>(this->address + Offsets::Instance::ChildrenStart);
-	std::uint64_t end = g_comms.read<std::uint64_t>(start + Offsets::Instance::ChildrenEnd);
-	for (auto instance = g_comms.read<std::uint64_t>(start); instance != end; instance += 0x10) {
-		
-		children.emplace_back(instance_t(g_comms.read<std::uint64_t>(instance)));
+	std::uint64_t start = canada->read<std::uint64_t>(this->address + Offsets::Instance::ChildrenStart);
+	std::uint64_t end = canada->read<std::uint64_t>(start + Offsets::Instance::ChildrenEnd);
+	for (std::uint64_t instance = canada->read<std::uint64_t>(start); instance != end; instance += 0x10) {
+		children.emplace_back(instance_t(canada->read<std::uint64_t>(instance)));
 	}
 	return children;
 }
@@ -73,12 +70,12 @@ std::uint64_t rbx::instance_t::find_first_child_by_class(const std::string& clas
 std::uint64_t rbx::instance_t::get_parent()
 {
 	rbx::instance_t* self = static_cast<rbx::instance_t*>(this);
-	rbx::instance_t parent = rbx::instance_t(g_comms.read<std::uint64_t>(self->address + Offsets::Instance::Parent));
+	rbx::instance_t parent = rbx::instance_t(canada->read<std::uint64_t>(self->address + Offsets::Instance::Parent));
 	return parent.address;
 }
 
 std::uint64_t rbx::instance_t::get_rigtype() {
-	return g_comms.read<std::uint64_t>(this->address + Offsets::Humanoid::RigType);
+	return canada->read<std::uint64_t>(this->address + Offsets::Humanoid::RigType);
 }
 
 
@@ -86,29 +83,29 @@ std::uint64_t rbx::instance_t::get_rigtype() {
 // part spefific
 math::vector3_t rbx::instance_t::get_position()
 {
-	return g_comms.read<math::vector3_t>(this->address + Offsets::BasePart::Position);
+	return canada->read<math::vector3_t>(this->address + Offsets::BasePart::Position);
 }
 
 math::matrix3_t rbx::instance_t::get_rotation()
 {
-	return g_comms.read<math::matrix3_t>(this->address + Offsets::BasePart::Rotation);
+	return canada->read<math::matrix3_t>(this->address + Offsets::BasePart::Rotation);
 }
 
 math::vector3_t rbx::instance_t::get_size()
 {
-	return g_comms.read<math::vector3_t>(this->address + Offsets::BasePart::Size);
+	return canada->read<math::vector3_t>(this->address + Offsets::BasePart::Size);
 
 }
 
 math::vector3_t rbx::instance_t::get_coordinate_frame()
 {
-	return g_comms.read<math::vector3_t>(this->address + Offsets::BasePart::Rotation);
+	return canada->read<math::vector3_t>(this->address + Offsets::BasePart::Rotation);
 
 }
 
 rbx::instance_t rbx::instance_t::get_primitive() const
 {
-	return g_comms.read<std::uint64_t>(this->address + Offsets::BasePart::Primitive);
+	return canada->read<std::uint64_t>(this->address + Offsets::BasePart::Primitive);
 
 }
 

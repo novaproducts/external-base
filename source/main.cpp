@@ -15,7 +15,7 @@ int main() {
 	datamodel = canada.read<std::uint64_t>(fake_datamodel + 0x1c0);
 	cached_player = rbx::instance_t(datamodel.find_first_child("Players")).get_children();
 	workspace = datamodel.find_first_child("Workspace");
-	std::cout << "workspace addy: 0x" << std::hex << workspace.address << std::dec << std::endl;
+	std::cout << "workspace addy2: 0x" << std::hex << workspace.address << std::dec << std::endl;
 	std::cout << "datamodel addy: 0x" << std::hex << datamodel.address << std::dec << std::endl;
 
 	cheat::feature::cache::initialize();

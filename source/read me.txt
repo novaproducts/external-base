@@ -1,2 +1,0 @@
-														offsets.
-												to update offsets go to https://imtheo.lol/Offsets/Offsets.hpp

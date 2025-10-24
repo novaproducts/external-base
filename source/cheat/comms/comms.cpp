@@ -1,4 +1,5 @@
-#include "comms.hpp"
+﻿#include "comms.hpp"
+#include <cassert>
 
 std::uint32_t canada_t::find_process_id(const std::string& process_name)
 {
@@ -17,7 +18,6 @@ std::uint32_t canada_t::find_process_id(const std::string& process_name)
 		}
 		CloseHandle(snapshot);
 	}
-	CloseHandle(snapshot);
 	return process_id;
 }
 
@@ -38,7 +38,6 @@ std::uint64_t canada_t::find_module_address(const std::string& module_name)
 		}
 		CloseHandle(snapshot);
 	}
-	CloseHandle(snapshot);
 	return module_address;
 }
 
@@ -52,13 +51,13 @@ void canada_t::attach_to_process(const std::string& process_name)
 std::string canada_t::read_string(std::uint64_t address)
 {
 	std::int32_t string_length = this->read<std::int32_t>(address + 0x10);
-	std::uint64_t string_addres = (string_length >= 16) ? this->read<std::uint64_t>(address) : address;
+	std::uint64_t string_address = (string_length >= 16) ? this->read<std::uint64_t>(address) : address;
 	if (string_length <= 0 || string_length > 255) { // could be 1048 aswell.
-		return std::string();
+		return "";
 	}
 
 	std::vector<char> buffer(string_length + 1, 0);
-	Luck_ReadVirtualMemory(this->process_handle, reinterpret_cast<PVOID>(string_addres), buffer.data(), string_length, nullptr);
+	Luck_ReadVirtualMemory(this->process_handle, reinterpret_cast<PVOID>(string_address), buffer.data(), string_length, nullptr);
 	return std::string(buffer.data());
 }
 

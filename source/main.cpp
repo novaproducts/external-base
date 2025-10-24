@@ -14,6 +14,7 @@ int main() {
 	cached_player = rbx::instance_t(datamodel.find_first_child("Players")).get_children();
 	workspace = datamodel.find_first_child("Workspace");
 
+
 	std::cout << "datamodel addy: 0x" << std::hex << datamodel.address << std::dec << std::endl;
 	std::cout << "visengine addy: 0x" << std::hex << g_visualengine->address << std::dec << std::endl;
 	std::cout << "workspace addy: 0x" << std::hex << workspace.address << std::dec << std::endl;
